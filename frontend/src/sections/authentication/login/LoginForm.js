@@ -39,8 +39,8 @@ function LoginForm({login}) {
     validationSchema: LoginSchema,
     onSubmit: (values) => {
         console.log(values.email);
-        console.log(values.password)
-      login(values.email, values.password);
+        console.log(values.password);
+        login(values.email, values.password);
     }
   });
 

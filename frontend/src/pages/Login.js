@@ -44,7 +44,7 @@ export default function Login() {
   return (
     <RootStyle title="Login | Minimal-UI">
       <AuthLayout>
-        Don’t have an account? &nbsp;
+        Don't have an account? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
           Get started
         </Link>
@@ -70,7 +70,7 @@ export default function Login() {
               display: { sm: 'none' }
             }}
           >
-            Don’t have an account?&nbsp;
+            Don't have an account?&nbsp;
             <Link variant="subtitle2" component={RouterLink} to="register" underline="hover">
               Get started
             </Link>
