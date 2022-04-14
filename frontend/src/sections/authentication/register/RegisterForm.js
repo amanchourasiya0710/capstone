@@ -1,18 +1,23 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
 
+import {connect as connectRedux} from 'react-redux';
+import {signup} from '../../../actions/auth';
+import account from 'src/_mocks_/account';
+
 // ----------------------------------------------------------------------
 
-export default function RegisterForm() {
+function RegisterForm({signup, isAuthenticated}) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -32,12 +37,21 @@ export default function RegisterForm() {
       password: ''
     },
     validationSchema: RegisterSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values) => {
+        signup(values.firstName, values.lastName, values.email, values.password, values.password);
+        setAccountCreated(true);
     }
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+
+  if (isAuthenticated) {
+    return <Navigate to='/' />
+  }
+
+  if (accountCreated) {
+    return <Navigate to='/login' />
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -104,3 +118,9 @@ export default function RegisterForm() {
     </FormikProvider>
   );
 }
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connectRedux(mapStateToProps, {signup}) (RegisterForm);

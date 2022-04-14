@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, Navigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider, connect } from 'formik';
 import {connect as connectRedux} from 'react-redux';
 import {login} from '../../../actions/auth';
@@ -21,8 +21,8 @@ import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-function LoginForm({login}) {
-  const navigate = useNavigate();
+function LoginForm({login, isAuthenticated}) {
+//   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -49,6 +49,10 @@ function LoginForm({login}) {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  if (isAuthenticated) {
+    return <Navigate to='/' />
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -109,4 +113,8 @@ function LoginForm({login}) {
   );
 }
 
-export default connectRedux(null, {login}) (LoginForm);
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connectRedux(mapStateToProps, {login}) (LoginForm);
