@@ -28,9 +28,7 @@ export const checkAuthenticated = () => async (dispatch) => {
                 'Accept': 'application/json'
             }
         }; 
-
         const body = JSON.stringify({ token: localStorage.getItem('access') });
-
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/jwt/verify/`, body, config)
 
@@ -48,7 +46,6 @@ export const checkAuthenticated = () => async (dispatch) => {
                 type: AUTHENTICATED_FAIL
             });
         }
-
     } else {
         dispatch({
             type: AUTHENTICATED_FAIL

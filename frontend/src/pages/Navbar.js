@@ -1,25 +1,18 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../actions/auth';
-import { checkAuthenticated, load_user } from '../actions/auth';
+import { logout } from '../actions/auth';;
 
-const Navbar = ({ logout, isAuthenticated, checkAuthenticated, load_user }) => {
+const Navbar = ({ logout, isAuthenticated}) => {
     const [redirect, setRedirect] = useState(false);
 
-    setRedirect(false);
-    console.log("aa to gya be iske andar...phir kyu mar raha h!");
+    // setRedirect(false);
+    console.log("aa to gyae iske andar...phir kyu mar raha ho!");
     
-    useEffect(() => {
-        checkAuthenticated();
-        load_user();
-    }, []);
-
     const logout_user = () => {
         logout();
         setRedirect(true);
     };
-
     const guestLinks = () => (
         <Fragment>
             <li className='nav-item'>
@@ -30,7 +23,6 @@ const Navbar = ({ logout, isAuthenticated, checkAuthenticated, load_user }) => {
             </li>
         </Fragment>
     );
-
     const authLinks = () => (
         <li className='nav-item'>
             <a className='nav-link' href='#!' onClick={logout_user}>Logout</a>
@@ -61,7 +53,7 @@ const Navbar = ({ logout, isAuthenticated, checkAuthenticated, load_user }) => {
                     </ul>
                 </div>
             </nav>
-            {redirect ? <Navigate to='/' /> : <Fragment></Fragment>}
+            {/* {redirect ? <Navigate to='/' /> : <Fragment></Fragment>} */}
         </Fragment>
     );
 };
@@ -70,4 +62,4 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 });
     
-export default connect(mapStateToProps, { logout, checkAuthenticated, load_user})(Navbar);
+export default connect(mapStateToProps, { logout})(Navbar);

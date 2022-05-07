@@ -11,6 +11,7 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import Home from './pages/Home';
+import LayoutLayout from './pages/LayoutLayout'
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         // { path: '/', element: <Navigate to="/dashboard/app" /> },
-        { path: '/', element: <Home /> },
+        { path: '/', element: <LayoutLayout /> },
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
         // { path: 'reset-password', element: <ResetPassword /> },
