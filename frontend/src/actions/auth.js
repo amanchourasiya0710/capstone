@@ -204,7 +204,6 @@ export const verify = (uid, token) => async dispatch => {
     }
 };
 
-
 export const logout = () => dispatch => {
     dispatch({
         type: LOGOUT

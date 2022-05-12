@@ -25,9 +25,7 @@ class FormFields(models.Model):
     fieldName = models.CharField(max_length=256)
     fieldType = models.ForeignKey(FieldTypes, on_delete=models.CASCADE)
     fieldLocation=models.IntegerField(default=0)
-
     class Meta:
         verbose_name_plural = 'FormFields'
-
     def __str__(self):
         return '{} {}'.format(self.background, self.fieldName)
