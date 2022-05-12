@@ -12,6 +12,6 @@ def forms_list(request):
     
     if request.method == 'GET':
         forms = Forms.objects.all()
+        # serializer = FormsSerializer(forms)
         serializer = FormsSerializer(forms, many=True)
-        print("serializer -->> :: ", serializer)
         return Response(serializer.data)
