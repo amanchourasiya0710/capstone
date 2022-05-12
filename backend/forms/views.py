@@ -8,7 +8,7 @@ from .serializers import FormsSerializer
 def forms_list(request):
     "List all form types present in the database."
     
-    forms = Forms.objects.all()
-    serializer = FormsSerializer(forms, many=True)
-    print("serializer -->> :: ", serializer)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        forms = Forms.objects.all()
+        serializer = FormsSerializer(forms, many=True)
+        return Response(serializer.data)
