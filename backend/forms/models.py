@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import Department, Roles
+from accounts.models import Department, Roles, UserAccount
 
 class Forms(models.Model):
     name = models.CharField(max_length=256)
@@ -58,17 +58,25 @@ class TransitionRoles(models.Model):
     def __str__(self):
         return f'Transition:{self.transtion} Allowed to:{self.rolesAllowed}'
 
-# class FormInstance(models.Model):
-#     form = models.ForeignKey(Forms, on_delete=models.CASCADE, related_name='formInstances')
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='requests')
-#     time = models.DateTimeField(auto_now_add=True)
-#     currentState = models.ForeignKey(WorkFlowStates, on_delete=models.CASCADE, related_name='activeforms')
+class FormInstance(models.Model):
+    form = models.ForeignKey(Forms, on_delete=models.CASCADE, related_name='formInstances')
+    userEmail = models.EmailField(max_length=250)
+    # user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='requests')
+    time = models.DateTimeField(auto_now_add=True)
+    currentState = models.ForeignKey(WorkFlowStates, on_delete=models.CASCADE, related_name='activeforms')
+    class Meta:
+        verbose_name_plural = 'FormInstances'
+    def __str__(self):
+        return f'{self.form} Instance: {self.id}'
 
-
-# class FormFieldData(models.Model):
-#     fieldId = models.ForeignKey(FormFields, on_delete=models.CASCADE, related_name='fieldData')
-#     formInst = models.ForeignKey(FormInstance, on_delete=models.CASCADE, related_name='formData')
-#     value = models.CharField(max_length=1000)
+class FormFieldData(models.Model):
+    fieldId = models.ForeignKey(FormFields, on_delete=models.CASCADE, related_name='fieldData')
+    formInst = models.ForeignKey(FormInstance, on_delete=models.CASCADE, related_name='formData')
+    value = models.CharField(max_length=1000)
+    class Meta:
+        verbose_name_plural = 'FormFieldData'
+    def __str__(self):
+        return f'{self.formInst} Data: {self.fieldId}'
 
 
 # class WorkflowData(models.Model):
