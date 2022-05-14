@@ -8,13 +8,13 @@ from .models import FormInstance, Forms, FormFields, WorkFlow, WorkFlowStates
 from .serializers import FormsSerializer, FormFieldsSerializer, WorkFlowStatesSerializer, FormInstanceSerializer, FormFieldDataSerializer
 
 @api_view(['GET'])
-def forms_list(request):
+def get_forms(request):
     "List all form types present in the database."
     if request.method == 'GET':
         forms = Forms.objects.all()
         serializer = FormsSerializer(forms, many=True)
         print("serializer -->> :: ", serializer)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 @api_view(['POST'])
 def get_form_fields(request):
@@ -25,7 +25,7 @@ def get_form_fields(request):
         if form_serializer.is_valid():
             formName = form_serializer.data['name'] 
             formObject = Forms.objects.get(name=formName)
-            print("form Object: ", formObject)
+            # print("form Object: ", formObject)
 
             # formfields = FormFields.objects.all().filter(form=formObject)
             formfields = FormFields.objects.filter(form=formObject)
@@ -40,11 +40,7 @@ def get_form_fields(request):
                     "fieldLocation": obj.fieldLocation
                 }
                 result.append(d)
-            # formfields_serializer = FormFieldsSerializer(formfields, many=True)
-            # print("old>>>>>>>>>>>>>>>>>>>>>>", formfields_serializer.data)
-            # result_serializer = serializers.serialize('json', result, fields=('background', 'fieldName', 'fieldType', 'fieldLocation',))
-            # print("new>>>>>>>>>>>>>>>>>>>>>>", result_serializer.data)
-            return Response(result, status=status.HTTP_201_CREATED)
+            return Response(result, status=status.HTTP_200_OK)
             # return Response(formfields_serializer.data, status=status.HTTP_201_CREATED)
         return Response(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -89,7 +85,6 @@ def create_form_instance(request):
         serializer = FormInstanceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-
             result = [{
                 "form_instance_id": FormInstance.objects.last().id
             }]
