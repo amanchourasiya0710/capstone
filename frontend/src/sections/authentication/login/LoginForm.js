@@ -48,8 +48,6 @@ function LoginForm({ login, isAuthenticated }) {
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
     formik;
-  console.log(touched);
-  console.log(getFieldProps("password"));
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);

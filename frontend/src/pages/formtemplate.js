@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { faker } from "@faker-js/faker";
-import { Formik, Form } from "formik";
 // import { TextField } from "./TextField";
 import { TextField } from "@mui/material";
 import * as Yup from "yup";
@@ -10,6 +9,8 @@ import "../css/formtemplate.css";
 import { styled } from "@mui/material/styles";
 import { Stack } from "@mui/material";
 import { Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { useFormik, Form, FormikProvider, connect } from "formik";
 
 const ContentStyle = styled("div")(({ theme }) => ({
   maxWidth: "93%",
@@ -70,6 +71,7 @@ export default function FormTemplate() {
   const [loadPage, setLoadPage] = useState(0);
   const [formFields, setFormFields] = useState([]);
   const [validate, setValidate] = useState(Yup.object().shape({}));
+  const [initialValues, setInitialValues] = useState({});
 
   const res = axios
     .post(
@@ -79,113 +81,127 @@ export default function FormTemplate() {
     )
     .then((res) => {
       let formNames = [];
+      const tempInitialValues = {};
       for (var i = 0; i < res.data.length; i += 1) {
+        let nameOfField = createKey(
+          res.data[i].background,
+          res.data[i].fieldName
+        );
         formNames.push([
           res.data[i].fieldName,
           res.data[i].background,
           res.data[i].fieldType,
+          nameOfField,
         ]);
+        tempInitialValues[nameOfField] = "";
       }
       const formField = [...Array(formNames.length)].map((_, index) => ({
         id: faker.datatype.uuid(),
         background: formNames[index][1],
         fieldName: formNames[index][0],
         fieldType: formNames[index][2],
-        name: createKey(formNames[index][1], formNames[index][0]),
+        name: formNames[index][3],
       }));
       if (loadPage == 0) {
         setLoadPage(1);
         setFormFields(formField);
         let schemax = createValidationSchema(formField);
         setValidate(Yup.object().shape(schemax));
-        console.log(formField);
+        setInitialValues(tempInitialValues);
+        // console.log(tempInitialValues);
       }
     });
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validate,
+    onSubmit: (values) => {
+        
+    },
+  });
+
+  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
+    formik;
+
   return (
     <div className="container mt-3">
       <ContentStyle>
-        <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          }}
-          validationSchema={validate}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
-        >
-          {(formik) => {
-            const {
-              errors,
-              touched,
-              values,
-              isSubmitting,
-              handleSubmit,
-              getFieldProps,
-            } = formik;
-            return (
-              <div>
-                <Stack sx={{ mb: 5 }}>
-                  <Typography variant="h3" gutterBottom>
-                    LEAVE FORM
-                  </Typography>
-                  <Typography
-                    sx={{ color: "text.secondary", fontSize: "1.3rem" }}
-                  >
-                    Please fill out the details below carefully.
-                  </Typography>
-                </Stack>
-                <Form>
-                  <Stack spacing={3}>
-                    {formFields.map((field) => {
-                      return (
-                        <ContentStyle>
-                          {field.background == "" ? (
-                            <div></div>
-                          ) : (
-                            <Typography
-                              sx={{
-                                color: "text.dark",
-                                fontSize: "1rem",
-                                marginBottom: "15px",
-                                marginLeft: "7px",
-                              }}
-                            >
-                              {field.background}
-                            </Typography>
-                          )}
-                          <TextField
-                            label={field.fieldName}
-                            background={field.background}
-                            name={field.name}
-                            type={field.fieldType === "DATE" ? "date" : "text"}
-                            key={field.id}
-                            {...getFieldProps(field.name)}
-                            error={Boolean(
-                              touched[field.name] && errors[field.name]
-                            )}
-                            helperText={
-                              touched[field.name] && errors[field.name]
-                            }
-                          />
-                        </ContentStyle>
-                      );
-                    })}
-                  </Stack>
-                  <button className="btn btn-dark mt-3" type="submit">
-                    Register
-                  </button>
-                  <button className="btn btn-danger mt-3 ml-3" type="reset">
-                    Reset
-                  </button>
-                </Form>
-              </div>
-            );
-          }}
-        </Formik>
+        <div>
+          <Stack sx={{ mb: 5 }}>
+            <Typography variant="h3" gutterBottom>
+              LEAVE FORM
+            </Typography>
+            <Typography sx={{ color: "text.secondary", fontSize: "1.3rem" }}>
+              Please fill out the details below carefully.
+            </Typography>
+          </Stack>
+          <FormikProvider value={formik}>
+            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+              <Stack spacing={3}>
+                {formFields.map((field) => {
+                  return (
+                    <ContentStyle key={field.id}>
+                      {field.background == "" ? (
+                        <div></div>
+                      ) : (
+                        <Typography
+                          sx={{
+                            color: "text.dark",
+                            fontSize: "1rem",
+                            marginBottom: "15px",
+                            marginLeft: "7px",
+                          }}
+                        >
+                          {field.background}
+                        </Typography>
+                      )}
+                      <TextField
+                        label={field.fieldName}
+                        background={field.background}
+                        name={field.name}
+                        type={field.fieldType === "DATE" ? "date" : "text"}
+                        {...getFieldProps(field.name)}
+                        error={Boolean(
+                          touched[field.name] && errors[field.name]
+                        )}
+                        helperText={touched[field.name] && errors[field.name]}
+                      />
+                    </ContentStyle>
+                  );
+                })}
+              </Stack>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{
+                  my: 4,
+                  width: "93%",
+                  paddingLeft: "50px",
+                  paddingRight: "50px",
+                }}
+              >
+                <LoadingButton
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  Submit Request
+                </LoadingButton>
+
+                {/* <LoadingButton
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  Save as Draft
+                </LoadingButton> */}
+              </Stack>
+            </Form>
+          </FormikProvider>
+        </div>
       </ContentStyle>
     </div>
   );
