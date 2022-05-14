@@ -10,9 +10,11 @@ import Products from './pages/Products';
 import Blog from './pages/Blog';
 import Check from "./pages/check";
 import User from './pages/User';
+import TemplateForm from "./sections/authentication/login/templateform";
+import FormTemplate from "./pages/formtemplate";
 import NotFound from './pages/Page404';
 import Home from './pages/Home';
-import LayoutLayout from './pages/LayoutLayout'
+import LayoutLayout from './pages/LayoutLayout';
 
 // ----------------------------------------------------------------------
 
@@ -32,12 +34,14 @@ export default function Router() {
         { path: "activate/:uid/:token", element: <Activate /> },
         { path: "404", element: <NotFound /> },
         { path: "*", element: <Navigate to="/404" /> },
-      ],
-    },
-    {
-      path: "/dashboard",
-      element: <DashboardLayout />,
-      children: [
+    ],
+},
+{
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+        { path: "template/*", element: <TemplateForm /> },
+        { path: "form/template/*", element: <FormTemplate /> },
         { path: "app", element: <DashboardApp /> },
         { path: "user", element: <User /> },
         { path: "products", element: <Products /> },

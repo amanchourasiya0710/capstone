@@ -87,7 +87,7 @@ export default function User() {
   const [loadPage, setLoadPage] = useState(0);
 
   const res = axios
-    .get(`${process.env.REACT_APP_API_URL}/forms/get/`)
+    .get(`${process.env.REACT_APP_API_URL}/forms/get_forms/`)
     .then((res) => {
         let formNames = [];
       for (var i = 0; i < res.data.length; i += 1) {
@@ -210,7 +210,7 @@ export default function User() {
                         name,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
-
+                      let toField = "/dashboard/template/" + name;
                       return (
                         <TableRow
                           hover
@@ -228,7 +228,7 @@ export default function User() {
                             >
                               <span></span>
                               <Link
-                                to="#"
+                                to={toField}
                                 color="inherit"
                                 underline="hover"
                                 component={RouterLink}
