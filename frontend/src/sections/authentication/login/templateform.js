@@ -48,7 +48,7 @@ const divStyle = {
 };
 
 function getFormName(url) {
-  let name = url.substr(20, url.length);
+  let name = url.substr(25, url.length);
   let formName = "";
   let index = 0;
   while (index < name.length) {
@@ -60,11 +60,12 @@ function getFormName(url) {
     formName += name[index];
     index += 1;
   }
-  console.log(formName);
+  console.log("hey",formName);
   return formName;
 }
 
 function FormData({ login, isAuthenticated }) {
+    console.log(window.location.pathname);
   let formName = getFormName(window.location.pathname);
   const config = {
     headers: {

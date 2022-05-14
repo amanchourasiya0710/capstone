@@ -1,20 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
-body {
-    font-family: 'Roboto', sans-serif;
+::-webkit-datetime-edit-year-field:not([aria-valuenow]),
+::-webkit-datetime-edit-month-field:not([aria-valuenow]),
+::-webkit-datetime-edit-day-field:not([aria-valuenow]) {
+    color: transparent;
 }
 
-label {
-    font-size: .7rem;
-}
-
-input.form-control,
-input.form-control:focus {
-    background: #F0F0FF;
-}
-
-.error {
-    position: absolute;
-    color: red;
-    font-size: .6rem;
+input[type="date"]:in-range::-webkit-datetime-edit-year-field,
+input[type="date"]:in-range::-webkit-datetime-edit-month-field,
+input[type="date"]:in-range::-webkit-datetime-edit-day-field,
+input[type="date"]:in-range::-webkit-datetime-edit-text {
+    color: transparent;
 }
