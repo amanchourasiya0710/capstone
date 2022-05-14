@@ -78,8 +78,8 @@ class FormFieldData(models.Model):
     def __str__(self):
         return f'{self.formInst} Data: {self.fieldId}'
 
-
-# class WorkflowData(models.Model):
-#     formInst = models.ForeignKey(FormInstance, on_delete=models.CASCADE, related_name='workflowdata')
-#     transitions = models.ForeignKey(StateTransition, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class WorkflowData(models.Model):
+    formInst = models.ForeignKey(FormInstance, on_delete=models.CASCADE, related_name='workflowdata')
+    transitions = models.ForeignKey(StateTransition, on_delete=models.CASCADE)
+    userEmail = models.EmailField(max_length=250)
+    # user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='requests')
