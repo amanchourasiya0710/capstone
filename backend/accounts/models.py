@@ -1,6 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+class Department(models.Model):
+    name=models.CharField(max_length=256)
+    class Meta:
+        verbose_name_plural = 'Department'
+    def __str__(self):
+        return self.name
+
+class Roles(models.Model):
+    name=models.CharField(max_length=256)
+    class Meta:
+        verbose_name_plural = 'Roles'
+    def __str__(self):
+        return self.name
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
