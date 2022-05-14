@@ -1,3 +1,4 @@
+from concurrent.futures import process
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -78,15 +79,28 @@ def get_form_states(request):
             # return Response(states_serializer.data, status=status.HTTP_201_CREATED)
         return Response(form_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
 def create_form_instance(request):
     "Give (formName, userName, currentState) and your new form instance will get created."
     if request.method == 'POST':
-        serializer = FormInstanceSerializer(data=request.data)
+
+        form_obj = Forms.objects.get(name=request.data['form'])
+        workflow_obj = WorkFlow.objects.get(form=form_obj)
+        all_obj = WorkFlowStates.objects.filter(workflow=workflow_obj)
+        min_id = 10**9
+        for obj in all_obj:
+            min_id = min(min_id, obj.id)
+
+        processed_data = request.data
+        processed_data["form"] = form_obj.id
+        processed_data["currentState"] = min_id
+
+        serializer = FormInstanceSerializer(data=processed_data)
         if serializer.is_valid():
-            serializer.save()
+            obj = serializer.save()
             result = [{
-                "form_instance_id": FormInstance.objects.last().id
+                "form_instance_id": obj.id
             }]
             return Response(result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

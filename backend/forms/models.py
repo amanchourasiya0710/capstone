@@ -37,6 +37,7 @@ class WorkFlow(models.Model):
 class WorkFlowStates(models.Model):
     workflow = models.ForeignKey(WorkFlow, on_delete=models.CASCADE, related_name='states')
     state = models.CharField(max_length=256)
+    
     class Meta:
         verbose_name_plural = 'WorkFlowStates'
     def __str__(self):

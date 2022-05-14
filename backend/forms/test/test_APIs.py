@@ -24,10 +24,10 @@ class TestAPIs(TestCase):
 
     def test_get_forms(self):
         response = self.client.get('/forms/get_forms/')
-        self.assertEquals(response.json(), [{'name': 'LEAVE FORM'}, {'name': 'REIMBURSEMENT FORM'}])
         self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.json(), [{'name': 'LEAVE FORM'}, {'name': 'REIMBURSEMENT FORM'}])
 
     def test_get_form_fields(self):
         response = self.client.post('/forms/get_form_fields/', {"name": "LEAVE FORM"})
-        print(response.json())
-        self.assertEquals(1, 1)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.json(), [{'form_field_id': 1, 'background': '', 'fieldName': 'Name', 'fieldType': 'STRING', 'fieldLocation': 0}])
