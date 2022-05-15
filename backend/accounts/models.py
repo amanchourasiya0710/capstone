@@ -53,6 +53,9 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
+    class Meta:
+        ordering = ('email', 'first_name', 'last_name')
+
     def get_full_name(self):
         return self.first_name
 
