@@ -24,7 +24,11 @@ class FormFields(models.Model):
     class Meta:
         verbose_name_plural = 'FormFields'
     def __str__(self):
-        return f'{self.background}:: {self.fieldName}:: id::{self.id}'
+        _fieldName = self.fieldName[:15]
+        _background = self.background[:15]
+        if _background == '':
+            return f'{_fieldName}'
+        return f'{_background}:: {_fieldName}'
     
 class WorkFlow(models.Model):
     name = models.CharField(max_length=256)
