@@ -24,4 +24,4 @@ class FormInstanceSerializer(serializers.ModelSerializer):
 class FormFieldDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = FormFieldData
-        fields = ('fieldId', 'formInst', 'value',)
+        fields = ('fieldId', 'formInst', 'value')

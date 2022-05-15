@@ -24,8 +24,8 @@ class FormFields(models.Model):
     class Meta:
         verbose_name_plural = 'FormFields'
     def __str__(self):
-        return '{} {}'.format(self.background, self.fieldName)
-         
+        return f'{self.background}:: {self.fieldName}:: id::{self.id}'
+    
 class WorkFlow(models.Model):
     name = models.CharField(max_length=256)
     form = models.ForeignKey(Forms, on_delete=models.CASCADE)
@@ -37,6 +37,7 @@ class WorkFlow(models.Model):
 class WorkFlowStates(models.Model):
     workflow = models.ForeignKey(WorkFlow, on_delete=models.CASCADE, related_name='states')
     state = models.CharField(max_length=256)
+    
     class Meta:
         verbose_name_plural = 'WorkFlowStates'
     def __str__(self):
@@ -47,6 +48,7 @@ class StateTransition(models.Model):
     toState = models.ForeignKey(WorkFlowStates, on_delete=models.CASCADE, related_name='toState')
     class Meta:
         verbose_name_plural = 'StateTransition'
+        ordering = ('fromState', 'toState')
     def __str__(self):
         return f'{self.fromState} -> {self.toState}'
 
@@ -64,8 +66,10 @@ class FormInstance(models.Model):
     # user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name='requests')
     time = models.DateTimeField(auto_now_add=True)
     currentState = models.ForeignKey(WorkFlowStates, on_delete=models.CASCADE, related_name='activeforms')
-    class Meta:
+    class Meta: 
         verbose_name_plural = 'FormInstances'
+        # ordering = ('form_name', 'userEmail', 'view_current_state', 'view_time')
+
     def __str__(self):
         return f'{self.form} Instance: {self.id}'
 
@@ -76,7 +80,7 @@ class FormFieldData(models.Model):
     class Meta:
         verbose_name_plural = 'FormFieldData'
     def __str__(self):
-        return f'{self.formInst} Data: {self.fieldId}'
+        return f'{self.formInst} FieldID:: {self.fieldId} '
 
 class WorkflowData(models.Model):
     formInst = models.ForeignKey(FormInstance, on_delete=models.CASCADE, related_name='workflowdata')
