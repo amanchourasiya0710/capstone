@@ -1,5 +1,4 @@
 import { filter } from "lodash";
-import { sentenceCase } from "change-case";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
@@ -9,9 +8,7 @@ import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
-  Checkbox,
   TableRow,
   TableBody,
   TableCell,
@@ -23,7 +20,6 @@ import {
 } from "@mui/material";
 // components
 import Page from "../components/Page";
-import Label from "../components/Label";
 import Scrollbar from "../components/Scrollbar";
 import Iconify from "../components/Iconify";
 import SearchNotFound from "../components/SearchNotFound";
@@ -76,6 +72,10 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+function changeWindow(url){
+    window.location = "http://localhost:8000/admin/forms/forms/";
+}
+
 export default function User() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -119,24 +119,6 @@ export default function User() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -170,15 +152,15 @@ export default function User() {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            User
+            Forms
           </Typography>
           <Button
             variant="contained"
-            component={RouterLink}
-            to="#"
+            onClick = {changeWindow}
+            to="/http://localhost:8000/admin/"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            New User
+            New Form
           </Button>
         </Stack>
 
@@ -205,12 +187,9 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const {
-                        id,
-                        name,
-                      } = row;
+                      const { id, name } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
-                      let toField = "/dashboard/template/" + name;
+                      let toField = "/dashboard/forms/" + name;
                       return (
                         <TableRow
                           hover
@@ -233,7 +212,7 @@ export default function User() {
                                 underline="hover"
                                 component={RouterLink}
                               >
-                                <Typography variant="subtitle2" noWrap>
+                                <Typography variant="subtitle1" noWrap>
                                   {name}
                                 </Typography>
                               </Link>

@@ -20,7 +20,7 @@ const ContentStyle = styled("div")(({ theme }) => ({
 }));
 
 function getFormName(url) {
-  let name = url.substr(25, url.length);
+  let name = url.substr(17, url.length);
   let formName = "";
   let index = 0;
   while (index < name.length) {
@@ -146,46 +146,51 @@ export default function FormTemplate() {
   const [formFields, setFormFields] = useState([]);
   const [validate, setValidate] = useState(Yup.object().shape({}));
   const [initialValues, setInitialValues] = useState({});
-
-  const res = axios
-    .post(
-      `${process.env.REACT_APP_API_URL}/forms/get_form_fields/`,
-      body,
-      config
-    )
-    .then((res) => {
-      let formNames = [];
-      const tempInitialValues = {};
-      for (var i = 0; i < res.data.length; i += 1) {
-        let nameOfField = createKey(
-          res.data[i].background,
-          res.data[i].fieldName
-        );
-        formNames.push([
-          res.data[i].fieldName,
-          res.data[i].background,
-          res.data[i].fieldType,
-          nameOfField,
-          res.data[i].form_field_id,
-        ]);
-        tempInitialValues[nameOfField] = "";
-      }
-      const formField = [...Array(formNames.length)].map((_, index) => ({
-        id: faker.datatype.uuid(),
-        fieldId: formNames[index][4],
-        background: formNames[index][1],
-        fieldName: formNames[index][0],
-        fieldType: formNames[index][2],
-        name: formNames[index][3],
-      }));
-      if (loadPage == 0) {
-        setLoadPage(1);
-        setFormFields(formField);
-        let schemax = createValidationSchema(formField);
-        setValidate(Yup.object().shape(schemax));
-        setInitialValues(tempInitialValues);
-      }
-    });
+  try{
+      const res = axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/forms/get_form_fields/`,
+          body,
+          config
+        )
+        .then((res) => {
+          let formNames = [];
+          const tempInitialValues = {};
+          for (var i = 0; i < res.data.length; i += 1) {
+            let nameOfField = createKey(
+              res.data[i].background,
+              res.data[i].fieldName
+            );
+            formNames.push([
+              res.data[i].fieldName,
+              res.data[i].background,
+              res.data[i].fieldType,
+              nameOfField,
+              res.data[i].form_field_id,
+            ]);
+            tempInitialValues[nameOfField] = "";
+          }
+          const formField = [...Array(formNames.length)].map((_, index) => ({
+            id: faker.datatype.uuid(),
+            fieldId: formNames[index][4],
+            background: formNames[index][1],
+            fieldName: formNames[index][0],
+            fieldType: formNames[index][2],
+            name: formNames[index][3],
+          }));
+          if (loadPage == 0) {
+            setLoadPage(1);
+            setFormFields(formField);
+            let schemax = createValidationSchema(formField);
+            setValidate(Yup.object().shape(schemax));
+            setInitialValues(tempInitialValues);
+          }
+        });
+  }
+  catch(err){
+      console.log("Yaa");
+      console.log(err);
+  }
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -207,7 +212,7 @@ export default function FormTemplate() {
         <div>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h3" gutterBottom>
-              LEAVE FORM
+              {formName}
             </Typography>
             <Typography sx={{ color: "text.secondary", fontSize: "1.3rem" }}>
               Please fill out the details below carefully.
