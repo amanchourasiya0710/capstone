@@ -186,21 +186,28 @@ class WorkFlowStatesAdmin(admin.ModelAdmin):
 class StateTransitionAdmin(admin.ModelAdmin):
     list_display = (
         'fromState', 
-        'toState'
+        'toState',
+        'view_related_form',
+        'view_related_workflow'
     )
-    # list_display = (
-    #     'fromState', 
-    #     'toState',
-    #     'view_related_workflow',
-    #     'view_related_form'
-    # )
 
-    # def view_workflow(self, obj):
-    #     url = (
-    #         reverse('admin:forms_workflow_changelist')
-    #         + "?"
-    #         + f'form={obj.workflow.form.id}'
-    #     )
-    #     return format_html('<a href="{}">{}</a>', url, obj.workflow)
-    # view_workflow.short_description = 'RELATED WORKFLOW'
+    def view_related_workflow(self, obj):
+        workflowstate = WorkFlowStates.objects.get(state=obj.toState)
+        url = (
+            reverse('admin:forms_workflow_changelist')
+            + "?"
+            + f'form={workflowstate.workflow.id}'
+        )
+        return format_html('<a href="{}">{}</a>', url, workflowstate.workflow)
+    view_related_workflow.short_description = 'RELATED WORKFLOW'
+
+    def view_related_form(self, obj):
+        workflowstate = WorkFlowStates.objects.get(state=obj.toState)
+        url = (
+            reverse('admin:forms_forms_changelist')
+            + "?"
+            + f'pk={workflowstate.workflow.form.id}'
+        )
+        return format_html('<a href="{}">{}</a>', url, workflowstate.workflow.form)
+    view_related_form.short_description = 'RELATED FORM'
 
