@@ -59,22 +59,32 @@ function createValidationSchema(fields) {
   return validationSchema;
 }
 
-const sendFormData = (data) => {
-  if (localStorage.getItem("formInstID")) {
+const sendFormData = (data, formFields) => {
+  if (localStorage.getItem("formInstID") != null) {
     const config = {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     };
+
+    let dataToBeSent = [];
+    for (let index = 0; index < formFields.length; index++) {
+      dataToBeSent.push({
+        fieldId: formFields[index]["fieldId"],
+        formInst: localStorage.getItem("formInstID"),
+        value: data[formFields[index]["name"]],
+      });
+    }
+
     const body = JSON.stringify({
-      data: data,
-      instID: localStorage.getItem("formInstID"),
+      data: dataToBeSent,
     });
+
     try {
       const res = axios
         .post(
-          `${process.env.REACT_APP_API_URL}/forms/create_form_instance/`,
+          `${process.env.REACT_APP_API_URL}/forms/save_form_instance/`,
           body,
           config
         )
@@ -87,18 +97,23 @@ const sendFormData = (data) => {
   }
 };
 
-const sendFormInst = (name) => {
-  if (localStorage.getItem("access")) {
+const sendFormInst = (name, values, formFields) => {
+  if (localStorage.getItem("access") != null) {
+
+    console.log(localStorage.getItem("access"));
     const config = {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     };
+
     const body = JSON.stringify({
       form: name,
       userEmail: localStorage.getItem("email"),
     });
+
+    console.log(body);
     try {
       const res = axios
         .post(
@@ -107,7 +122,10 @@ const sendFormInst = (name) => {
           config
         )
         .then((res) => {
+          console.log("Yeah");
           console.log(res.data);
+          localStorage.setItem("formInstID", res.data[0]["form_instance_id"]);
+          sendFormData(values, formFields);
         });
     } catch (err) {
       console.log(err);
@@ -143,17 +161,18 @@ export default function FormTemplate() {
           res.data[i].background,
           res.data[i].fieldName
         );
-        console.log(res.data);
         formNames.push([
           res.data[i].fieldName,
           res.data[i].background,
           res.data[i].fieldType,
           nameOfField,
+          res.data[i].form_field_id,
         ]);
         tempInitialValues[nameOfField] = "";
       }
       const formField = [...Array(formNames.length)].map((_, index) => ({
         id: faker.datatype.uuid(),
+        fieldId: formNames[index][4],
         background: formNames[index][1],
         fieldName: formNames[index][0],
         fieldType: formNames[index][2],
@@ -165,7 +184,6 @@ export default function FormTemplate() {
         let schemax = createValidationSchema(formField);
         setValidate(Yup.object().shape(schemax));
         setInitialValues(tempInitialValues);
-        // console.log(tempInitialValues);
       }
     });
 
@@ -174,7 +192,9 @@ export default function FormTemplate() {
     validationSchema: validate,
     onSubmit: (values) => {
       console.log(values);
-      sendFormInst(formName);
+      console.log(formName);
+      console.log(formFields);
+      sendFormInst(formName, values, formFields);
     },
   });
 
@@ -194,7 +214,7 @@ export default function FormTemplate() {
             </Typography>
           </Stack>
           <FormikProvider value={formik}>
-            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+            <Form autoComplete="on" noValidate onSubmit={handleSubmit}>
               <Stack spacing={3}>
                 {formFields.map((field) => {
                   return (
