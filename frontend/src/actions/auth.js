@@ -27,7 +27,7 @@ export const checkAuthenticated = () => async (dispatch) => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
-        }; 
+        };
         const body = JSON.stringify({ token: localStorage.getItem('access') });
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/jwt/verify/`, body, config)
@@ -101,7 +101,8 @@ export const login = (email, password) => async (dispatch) => {
         body,
         config
     );
-
+    
+    localStorage.setItem("email", email);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,

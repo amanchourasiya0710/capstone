@@ -25,7 +25,7 @@ class FormFields(models.Model):
         verbose_name_plural = 'FormFields'
     def __str__(self):
         return '{} {}'.format(self.background, self.fieldName)
-    
+         
 class WorkFlow(models.Model):
     name = models.CharField(max_length=256)
     form = models.ForeignKey(Forms, on_delete=models.CASCADE)

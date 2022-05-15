@@ -54,6 +54,7 @@ export default function (state = initialState, action) {
     case AUTHENTICATED_FAIL:
         localStorage.setItem("access", null);
         localStorage.setItem("refresh", null);
+        localStorage.setItem("email", null);
         return {
             ...state,
             access: null,
@@ -64,6 +65,7 @@ export default function (state = initialState, action) {
     case USER_LOADED_FAIL:
         localStorage.setItem("access", null);
         localStorage.setItem("refresh", null);
+        localStorage.setItem("email", null);
         return {
             ...state,
             access: null,
@@ -76,6 +78,7 @@ export default function (state = initialState, action) {
     case LOGOUT:
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
+        localStorage.setItem("email", null);
         return {
             ...state,
             access: null,

@@ -59,6 +59,62 @@ function createValidationSchema(fields) {
   return validationSchema;
 }
 
+const sendFormData = (data) => {
+  if (localStorage.getItem("formInstID")) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+    const body = JSON.stringify({
+      data: data,
+      instID: localStorage.getItem("formInstID"),
+    });
+    try {
+      const res = axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/forms/create_form_instance/`,
+          body,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
+const sendFormInst = (name) => {
+  if (localStorage.getItem("access")) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+    const body = JSON.stringify({
+      form: name,
+      userEmail: localStorage.getItem("email"),
+    });
+    try {
+      const res = axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/forms/create_form_instance/`,
+          body,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
 export default function FormTemplate() {
   let formName = getFormName(window.location.pathname);
   const config = {
@@ -87,6 +143,7 @@ export default function FormTemplate() {
           res.data[i].background,
           res.data[i].fieldName
         );
+        console.log(res.data);
         formNames.push([
           res.data[i].fieldName,
           res.data[i].background,
@@ -116,7 +173,8 @@ export default function FormTemplate() {
     initialValues: initialValues,
     validationSchema: validate,
     onSubmit: (values) => {
-        
+      console.log(values);
+      sendFormInst(formName);
     },
   });
 
