@@ -5,8 +5,8 @@ from forms.models import *
 
 import json
 
-
-class TestAPIs(TestCase):   
+class TestAPIs(TestCase):  
+     
     def setUp(self):
         self.client = Client()
 
