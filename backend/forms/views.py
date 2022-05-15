@@ -8,6 +8,23 @@ from django.core import serializers
 from .models import FormInstance, Forms, FormFields, WorkFlow, WorkFlowStates
 from .serializers import FormsSerializer, FormFieldsSerializer, WorkFlowStatesSerializer, FormInstanceSerializer, FormFieldDataSerializer
 
+from accounts.models import UserAccount
+
+@api_view(['POST'])
+def get_username(request):
+    "Give (useremail) and get (firstname, lastname)"
+    if request.method == 'POST':
+        res = {
+            "fullname": ""
+        }
+        try:
+            _user = UserAccount.objects.get(email = request.data['useremail'])
+            res['fullname'] = _user.first_name + " " + _user.last_name
+            return Response(res, status=status.HTTP_200_OK)
+        except:
+            res['fullname'] = "INVALID"
+            return Response(res, status=status.HTTP_200_OK)
+
 @api_view(['GET'])
 def get_forms(request):
     "List all form types present in the database."
