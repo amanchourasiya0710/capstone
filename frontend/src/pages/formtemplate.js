@@ -260,7 +260,7 @@ export default function FormTemplate() {
                 sx={{
                   my: 4,
                   width: "93%",
-                  paddingLeft: "50px",
+                //   paddingLeft: "50px",
                   paddingRight: "50px",
                 }}
               >
