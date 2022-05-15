@@ -85,10 +85,13 @@ class TestAPIs(TestCase):
         self.assertEquals(response.json(), [{'form_instance_id': 2}])
     
     def test_save_form_instance(self):
-        req = [
+
+        req = {
+            "data": [
                 {"fieldId": 1, "formInst": self.form_inst_id, "value": "Anant"},
                 {"fieldId": 2, "formInst": self.form_inst_id, "value": "Computer Science"}
             ]
+        }
 
         response = self.client.post(
             '/forms/save_form_instance/', 
