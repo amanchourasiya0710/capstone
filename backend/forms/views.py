@@ -108,7 +108,8 @@ def create_form_instance(request):
 def save_form_instance(request):
     "Give form in form of (fieldId, formInst, value) and your form will be saved"
     if request.method == 'POST':
-        serializer = FormFieldDataSerializer(data=request.data, many=True)
+        processed_request = request.data['data']
+        serializer = FormFieldDataSerializer(data=processed_request, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
