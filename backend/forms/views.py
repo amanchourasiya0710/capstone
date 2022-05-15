@@ -104,7 +104,7 @@ def create_form_instance(request):
             return Response(result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['POST']) 
 def save_form_instance(request):
     "Give form in form of (fieldId, formInst, value) and your form will be saved"
     if request.method == 'POST':

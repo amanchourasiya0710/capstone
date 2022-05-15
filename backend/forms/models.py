@@ -28,7 +28,7 @@ class FormFields(models.Model):
         _background = self.background[:15]
         if _background == '':
             return f'{_fieldName}'
-        return f'{_background}:: {_fieldName}'
+        return f'{_background}... ---> {_fieldName}'
     
 class WorkFlow(models.Model):
     name = models.CharField(max_length=256)

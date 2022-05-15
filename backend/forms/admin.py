@@ -64,7 +64,7 @@ class FormFieldsAdmin(admin.ModelAdmin):
     view_related_form.short_description = 'RELATED FORM'
 
     def view_background(self, obj):
-        return obj.background
+        return obj.background[:20] + '...'
     view_background.short_description = 'BACKGROUND'
 
     def view_fieldname(self, obj):
