@@ -43,6 +43,9 @@ function LoginForm({ login, isAuthenticated }) {
       console.log(values.email);
       console.log(values.password);
       login(values.email, values.password);
+      if (isAuthenticated) {
+        return <Navigate to="/dashboard/forms" />;
+      }
     },
   });
 
@@ -54,7 +57,7 @@ function LoginForm({ login, isAuthenticated }) {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/dashboard/forms" />;
   }
 
   return (
@@ -134,7 +137,7 @@ function LoginForm({ login, isAuthenticated }) {
 }
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  isAuthenticated: localStorage.getItem("access") === null ? false : true,
 });
 
 export default connectRedux(mapStateToProps, { login })(LoginForm);

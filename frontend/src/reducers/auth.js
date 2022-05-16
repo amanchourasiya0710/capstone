@@ -78,7 +78,8 @@ export default function (state = initialState, action) {
     case LOGOUT:
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
-        localStorage.setItem("email", null);
+        localStorage.removeItem("email");
+        localStorage.removeItem("fullname");
         return {
             ...state,
             access: null,

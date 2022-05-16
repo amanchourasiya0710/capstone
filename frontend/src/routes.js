@@ -25,8 +25,8 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         // { path: '/', element: <Navigate to="/dashboard/app" /> },
-        { path: "/", element: <LayoutLayout /> },
-        { path: "login", element: <Login /> },
+        { path: "/", element: <Login /> },
+        // { path: "/", element: <LayoutLayout /> },
         { path: "register", element: <Register /> },
         // { path: 'reset-password', element: <ResetPassword /> },
         // { path: 'password/reset/confirm/:uid/:token', element: <ResetPasswordConfirm /> },
